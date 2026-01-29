@@ -1,0 +1,53 @@
+name: xiaomi-nabu
+run-name: Xiaomi Pad 5 UEFI
+on:
+  push:
+    paths:
+      - 'devices/xiaomi-nabu/**'
+      - '.github/workflows/xiaomi-nabu-uefi.yml'
+
+jobs:
+  esp:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Setup
+        run: |
+          sudo apt update
+          sudo apt install -y tree
+
+      - name: Checkout dualboot
+        uses: actions/checkout@v4
+        with:
+          path: dualboot
+
+      - name: Checkout pocketblue
+        uses: actions/checkout@v4
+        with:
+          repository: pocketblue/pocketblue
+          path: pocketblue
+
+      - name: Build disk image
+        id: build-raw
+        uses: osbuild/bootc-image-builder-action@v0.0.2
+        with:
+          #
+          # TODO
+          # Change this hardcode later.
+          #
+          config-file: ./pocketblue/bootc-image-builder.toml
+          image: ${{ vars.REGISTRY }}/xiaomi-nabu-gnome-desktop:43
+          rootfs: btrfs
+          types: |
+            raw
+     
+      - name: Mount disk image
+        run: sudo kpartx -vafs ${{ steps.build-raw.outputs.output-directory }}/image/disk.raw
+
+      - name: Build esp partition
+        run: sudo ./dualboot/devices/xiaomi-nabu/scripts/esp.sh
+
+      - name: Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: esp
+          path: esp.raw
