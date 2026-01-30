@@ -1,4 +1,4 @@
-name: xiaomi-nabu
+name: xiaomi-nabu-uefi
 on:
   workflow_dispatch:
     input:
