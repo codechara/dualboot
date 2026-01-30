@@ -6,8 +6,18 @@ on:
         # like https://github.com/pocketblue/pocketblue/releases/download/43.20251220/pocketblue-xiaomi-nabu-gnome-desktop-43.7z 
         description: 'Release URL (like: ../43.00000000/pocketblue-xiaomi-nabu-gnome-desktop-43.7z)' 
         required: true
+        type: string
       custom_uuid:
         description: Custom UUID for GRUB
+        type: string
+  workflow_call:
+    inputs:
+      release_url:
+        required: true
+        type: string
+      custom_uuid:
+        type: string
+
 run-name: Xiaomi Pad 5 UEFI ESP from ${{  }}
 
 jobs:
