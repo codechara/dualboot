@@ -1,0 +1,15 @@
+name: xiaomi-nabu
+on:
+  workflow_dispatch:
+    input:
+      pocketblue_release:
+        required: true
+        description: Pocketblue release number
+        default: 43.20251220
+run-name: Xiaomi Pad 5 UEFI ESP for ${{ inputs.pocketblue_release }}
+jobs:
+  esp:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Hello World!
+        run: echo Hello World!
