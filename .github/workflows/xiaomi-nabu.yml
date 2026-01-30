@@ -1,5 +1,5 @@
 name: xiaomi-nabu
-run-nams: Xiaomi Pad 5
+run-name: Xiaomi Pad 5
 on:
   push:
     paths:
