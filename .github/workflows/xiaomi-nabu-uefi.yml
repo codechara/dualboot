@@ -6,7 +6,10 @@ on:
         required: true
         description: Pocketblue release number
         default: 43.20251220
-  push
+  push:
+    paths:
+      - 'devices/xiaomi-nabu/**'
+      - '.github/workflows/xiaomi-nabu-uefi.yml'
 run-name: Xiaomi Pad 5 UEFI ESP for ${{ inputs.pocketblue_release }}
 jobs:
   esp:
