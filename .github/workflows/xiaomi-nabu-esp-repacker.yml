@@ -1,0 +1,28 @@
+name: xiaomi-nabu-esp-repacker
+on:
+  workflow_dispatch:
+    inputs:
+      release_url:
+        # like https://github.com/pocketblue/pocketblue/releases/download/43.20251220/pocketblue-xiaomi-nabu-gnome-desktop-43.7z 
+        description: 'Release URL (like: ../43.00000000/pocketblue-xiaomi-nabu-gnome-desktop-43.7z)' 
+        required: true
+      custom_uuid:
+        description: Custom UUID for GRUB
+run-name: Xiaomi Pad 5 UEFI ESP from ${{  }}
+
+jobs:
+  repack:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Setup
+        run: |
+          sudo apt update
+          sudo apt install -y 7zip tree
+    
+      - name: Download & extract release
+        run: |
+          curl "${{ inputs.image }}" --output release.7z
+          7z x release.7z
+
+      - name: Tree
+        run: tree
