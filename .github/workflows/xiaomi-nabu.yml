@@ -11,4 +11,4 @@ jobs:
   repack-run:
     uses: ./.github/workflows/xiaomi-nabu-esp-repacker.yml
     with:
-      release_url: https://github.com/pocketblue/pocketblue/releases/download/43.20251220/pocketblue-xiaomi-pipa-gnome-desktop-43.7z
+      release_url: https://github.com/pocketblue/pocketblue/releases/download/43.20251220/pocketblue-xiaomi-nabu-gnome-desktop-43.7z

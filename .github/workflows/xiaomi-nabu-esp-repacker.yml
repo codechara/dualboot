@@ -31,7 +31,7 @@ jobs:
     
       - name: Download & extract release
         run: |
-          curl "${{ inputs.release_url }}" --output release.7z
+          curl -L "${{ inputs.release_url }}" --output release.7z
           7z x release.7z
 
       - name: Tree
