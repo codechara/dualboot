@@ -48,7 +48,7 @@ jobs:
         run: tree
 
       - name: Create a new ESP
-        run: sudo ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
+        run: sudo bash ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
 
       - name: Tree
         run: tree
