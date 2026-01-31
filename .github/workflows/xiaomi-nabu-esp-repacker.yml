@@ -28,11 +28,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y 7zip tree
-    
+      
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: dualboot
+
       - name: Download & extract release
         run: |
           curl -L "${{ inputs.release_url }}" --output release.7z
-          7z x release.7z
+          7z x -orelease release.7z
 
       - name: Tree
         run: tree
