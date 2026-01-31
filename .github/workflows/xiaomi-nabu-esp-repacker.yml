@@ -34,10 +34,24 @@ jobs:
         with:
           path: dualboot
 
+      #
+      # TODO
+      # Add checksum verity to preserve broken release
+      #   archieves and broken ESPs
+      #
       - name: Download & extract release
         run: |
           curl -L "${{ inputs.release_url }}" --output release.7z
           7z x -orelease release.7z
 
+      - name: Create a new ESP
+        run: sudo ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
+
       - name: Tree
         run: tree
+
+      - name: Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp
+          path: esp.raw
