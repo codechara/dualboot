@@ -12,5 +12,10 @@ mount esp.raw esp.dual
 cp dualboot/devices/xiaomi-nabu/EFI esp.dual -r
 cp esp.orig/EFI/fedora esp.dual/EFI -r
 
+if [[ $CUSTOM_UUID != "" ]]; then
+	cp esp.dual/EFI/fedora/bootuuid.cfg esp.dual/EFI/fedora/bootuuid.cfg.bak
+	echo "set BOOT_UUID=\"$CUSTOM_UUID\"" > esp.dual/EFI/fedora/bootuuid.cfg
+fi
+
 umount esp.orig esp.dual
 rm -r esp.orig esp.dual

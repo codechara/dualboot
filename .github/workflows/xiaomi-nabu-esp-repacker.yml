@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       custom_uuid:
-        description: Custom UUID for GRUB
+        description: Custom UUID for GRUB (leave blank for release UUID)
         type: string
   workflow_call:
     inputs:
@@ -45,7 +45,9 @@ jobs:
           7z x -orelease release.7z
 
       - name: Create a new ESP
-        run: sudo bash ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
+        env:
+          CUSTOM_UUID: ${{ inputs.custom_uuid }}
+        run: sudo -E bash ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
 
       - name: Artifact
         uses: actions/upload-artifact@v4
