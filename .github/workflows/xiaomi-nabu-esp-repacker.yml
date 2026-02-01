@@ -4,21 +4,19 @@ on:
     inputs:
       release_url:
         # like https://github.com/pocketblue/pocketblue/releases/download/43.20251220/pocketblue-xiaomi-nabu-gnome-desktop-43.7z 
-        description: 'Release URL (like: ../43.00000000/pocketblue-xiaomi-nabu-gnome-desktop-43.7z)' 
-        required: true
+        description: 'Release URL (Leave blank for latest release) (like: ../43.00000000/pocketblue-xiaomi-nabu-gnome-desktop-43.7z)' 
         type: string
       custom_uuid:
-        description: Custom UUID for GRUB (leave blank for release UUID)
+        description: 'Custom UUID for GRUB (Leave blank for release UUID)'
         type: string
   workflow_call:
     inputs:
       release_url:
-        required: true
         type: string
       custom_uuid:
         type: string
 
-run-name: Xiaomi Pad 5 UEFI ESP from ${{ inputs.release_url }}
+run-name: Xiaomi Pad 5 UEFI ESP ${{ inputs.release_url }}
 
 jobs:
   repack:
@@ -40,11 +38,11 @@ jobs:
       #   archieves and broken ESPs
       #
       - name: Download & extract release
-        run: |
-          curl -L "${{ inputs.release_url }}" --output release.7z
-          7z x -orelease release.7z
+        env:
+          CUSTOM_URL: ${{ inputs.release_url }}
+        run: bash ./dualboot/devices/xiaomi-nabu/scripts/download.sh
 
-      - name: Create a new ESP
+      - name: ESP
         env:
           CUSTOM_UUID: ${{ inputs.custom_uuid }}
         run: sudo -E bash ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
