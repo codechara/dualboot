@@ -1,0 +1,54 @@
+name: xiaomi-nabu-esp-repacker
+on:
+  workflow_dispatch:
+    inputs:
+      release_url:
+        # like https://github.com/pocketblue/pocketblue/releases/download/43.20251220/pocketblue-xiaomi-nabu-gnome-desktop-43.7z 
+        description: 'Release URL (like: ../43.00000000/pocketblue-xiaomi-nabu-gnome-desktop-43.7z)' 
+        required: true
+        type: string
+      custom_uuid:
+        description: Custom UUID for GRUB
+        type: string
+  workflow_call:
+    inputs:
+      release_url:
+        required: true
+        type: string
+      custom_uuid:
+        type: string
+
+run-name: Xiaomi Pad 5 UEFI ESP from ${{ inputs.release_url }}
+
+jobs:
+  repack:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Setup
+        run: |
+          sudo apt update
+          sudo apt install -y 7zip tree
+      
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: dualboot
+
+      #
+      # TODO
+      # Add checksum verity to preserve broken release
+      #   archieves and broken ESPs
+      #
+      - name: Download & extract release
+        run: |
+          curl -L "${{ inputs.release_url }}" --output release.7z
+          7z x -orelease release.7z
+
+      - name: Create a new ESP
+        run: sudo bash ./dualboot/devices/xiaomi-nabu/scripts/create-dualboot-esp.sh
+
+      - name: Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp
+          path: esp.raw
