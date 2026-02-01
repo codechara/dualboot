@@ -51,4 +51,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: esp
-          path: esp.raw
+          path: |
+            esp.raw
+            esp.raw.bootuuid

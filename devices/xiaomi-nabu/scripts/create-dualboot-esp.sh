@@ -17,5 +17,8 @@ if [[ $CUSTOM_UUID != "" ]]; then
 	echo "set BOOT_UUID=\"$CUSTOM_UUID\"" > esp.dual/EFI/fedora/bootuuid.cfg
 fi
 
+basedir=$(dirname $0)
+echo $($basedir/extract_uuid_from_cfg.py esp.dual/EFI/fedora/bootuuid.cfg) > esp.raw.bootuuid
+
 umount esp.orig esp.dual
 rm -r esp.orig esp.dual
