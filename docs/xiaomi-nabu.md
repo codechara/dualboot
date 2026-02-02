@@ -20,7 +20,7 @@ You should prepare some files that helps you with installation:
 ## Installing
 ### Clean
 
-> [!NOTICE]
+> [!TIP]
 > If you're only installed pocketlblue with release scripts, then you still needed to do clean install
 > If you're installed dualbooting with A/B slots, you can skip *Clean* section.
 
