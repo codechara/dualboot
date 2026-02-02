@@ -1,0 +1,48 @@
+name: Xiaomi Pad 5 Daily
+run-name: Xiaomi Pad 5 Daily
+on:
+  push: {}
+  workflow_dispatch: {}
+  schedule:
+    - cron: '13 13 * * *'
+
+jobs:
+  repack:
+    uses: ./.github/workflows/xiaomi-nabu-esp-repacker.yml
+    concurrency:
+      group: repack
+
+  release:
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: repack
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: dualboot
+
+      - name: Get artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: esp
+
+      - name: Get release name
+        id: release
+        run: echo release=$(./dualboot/devices/xiaomi-nabu/scripts/get_latest_release.py) > $GITHUB_OUTPUT
+
+      - name: Get UUID from esp.raw
+        id: uuid
+        run: echo uuid=$(sudo ./dualboot/devices/xiaomi-nabu/scripts/uuid_from_esp_raw.sh) > $GITHUB_OUTPUT
+
+      - name: Zip
+        run: zip esp.zip esp.raw
+
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: esp.zip
+          make_latest: true
+          tag: ${{ steps.release.outputs.release }}-nabu-uefi-dualboot
+          release_name: Xiaomi Pad 5 ${{ steps.release.outputs.release }}
+          body: 'This release was built with followed UUID: `${{ steps.uuid.outputs.uuid }}`'
