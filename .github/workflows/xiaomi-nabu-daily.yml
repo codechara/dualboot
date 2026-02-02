@@ -1,7 +1,6 @@
 name: Xiaomi Pad 5 Daily
 run-name: Xiaomi Pad 5 Daily
 on:
-  push: {}
   workflow_dispatch: {}
   schedule:
     - cron: '13 13 * * *'
