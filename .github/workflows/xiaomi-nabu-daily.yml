@@ -43,6 +43,7 @@ jobs:
         with:
           file: esp.zip
           make_latest: true
+          overwrite: true #idk, if its need
           tag: ${{ steps.release.outputs.release }}-nabu-uefi-dualboot
           release_name: Xiaomi Pad 5 ${{ steps.release.outputs.release }}
           body: 'This release was built with followed UUID: `${{ steps.uuid.outputs.uuid }}`'
