@@ -1,0 +1,49 @@
+name: xiaomi-nabu-refind
+run-name: rEFInd
+on:
+  workflow_dispatch: {}
+  workflow_call: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout dualboot
+        uses: actions/checkout@v4
+        with:
+          path: dualboot
+
+      - name: Checkout rEFInd
+        run: git clone https://git.code.sf.net/p/refind/code refind --depth=1
+
+      - name: Setup
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential tree gnu-efi 
+
+      - name: Apply patches
+        run: |
+          cd refind
+          git apply ../dualboot/devices/xiaomi-nabu/patches/refind/*.patch
+
+      - name: Build
+        run: |
+          cd refind
+          make
+      
+      - name: Prepare artifact
+        run: |
+          mkdir output output/refind
+          cp refind/refind/refind_aa64.efi output/refind/
+          cp refind/icons -r output/refind/
+          cp refind/themes -r output/refind/
+          cp refind/refind.conf-sample output/refind/refind.conf
+
+      - name: Tree
+        run: tree
+
+      - name: Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rEFInd
+          path: output

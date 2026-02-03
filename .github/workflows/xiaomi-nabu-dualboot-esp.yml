@@ -1,0 +1,62 @@
+name: xiaomi-nabu-dualboot-esp
+run-name: Xiaomi Pad 5 Dualboot ESP 
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        type: string
+        required: true
+        description: 'URL to desired release.7z'
+      uuid:
+        type: string
+        description: 'Custom UUID (leave blank for UUID)'
+
+jobs:
+  refind:
+    uses: ./.github/workflows/xiaomi-nabu-refind.yml
+
+  reboot2android:
+    uses: ./.github/workflows/xiaomi-nabu-reboot2android.yml
+
+  esp:
+    needs: [refind, reboot2android]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Setup
+        run: sudo apt update && sudo apt install -y tree 7zip
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: dualboot
+
+      - name: Download release.7z
+        run: |
+          curl -L ${{ inputs.url }} --output release.7z
+          7z x -orelease release.7z
+
+      - name: Download rEFInd artifact 
+        uses: actions/download-artifact@v4
+        with:
+          name: rEFInd
+          path: refind
+
+      - name: Download Reboot2Android artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Reboot2Android
+          path: reboot2android
+
+      - name: Tree
+        run: tree
+
+      - name: Generate ESP
+        env:
+          CUSTOM_UUID: ${{ inputs.custom_uuid }}
+        run: sudo -E bash ./dualboot/devices/xiaomi-nabu/scripts/generate-esp.sh
+
+      - name: Artifact esp.raw
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp
+          path: esp.raw
