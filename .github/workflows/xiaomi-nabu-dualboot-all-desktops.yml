@@ -12,8 +12,9 @@ jobs:
 
   esp:
     needs: [refind, reboot2android]
-    matrix: 
-      desktop: [gnome-desktop, gnome-mobile, plasma-desktop, plasma-mobile, phosh]
+    strategy:
+      matrix: 
+        desktop: [gnome-desktop, gnome-mobile, plasma-desktop, plasma-mobile, phosh]
     uses: ./.github/workflows/xiaomi-nabu-dualboot-esp.yml
     with:
       url: 'https://github.com/pocketblue/pocketblue/releases/latest/download/pocketblue-xiaomi-nabu-${{ matrix.desktop }}-43.7z'
