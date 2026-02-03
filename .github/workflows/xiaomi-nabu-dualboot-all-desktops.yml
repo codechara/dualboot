@@ -1,0 +1,20 @@
+name: Xiaomi Pad 5 UEFI All Desktops
+run-name: Xiaomi Pad 5 UEFI All Desktops
+on:
+  workflow_dispatch: {}
+
+jobs:
+  refind:
+    uses: ./.github/workflows/xiaomi-nabu-refind.yml
+
+  reboot2android:
+    uses: ./.github/workflows/xiaomi-nabu-reboot2android.yml
+
+  esp:
+    needs: [refind, reboot2android]
+    matrix: 
+      desktop: [gnome-desktop, gnome-mobile, plasma-desktop, plasma-mobile, phosh]
+    uses: ./.github/workflows/xiaomi-nabu-dualboot-esp.yml
+    with:
+      url: 'https://github.com/pocketblue/pocketblue/releases/latest/download/pocketblue-xiaomi-nabu-${{ matrix.desktop }}-43.7z'
+      name: ${{ matrix.desktop }}
