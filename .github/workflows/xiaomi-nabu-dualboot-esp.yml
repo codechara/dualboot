@@ -18,7 +18,6 @@ run-name: Xiaomi Pad 5 ESP (${{ inputs.name }})
 
 jobs:
   esp:
-    needs: [refind, reboot2android]
     runs-on: ubuntu-24.04
     steps:
       - name: Setup
