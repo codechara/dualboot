@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix: 
         desktop: [gnome-desktop, plasma-desktop, plasma-mobile, phosh]
-    uses: ./.github/workflows/xiaomi-nabu-dualboot-esp.yml
+    uses: ./.github/workflows/xiaomi-nabu-esp.yml
     with:
       url: 'https://github.com/pocketblue/pocketblue/releases/latest/download/pocketblue-xiaomi-nabu-${{ matrix.desktop }}-43.7z'
       name: ${{ matrix.desktop }}
