@@ -11,7 +11,7 @@ mount esp.raw esp.gen
 
 mkdir esp.gen/EFI
 cp refind/refind esp.gen/EFI/BOOT -r && mv esp.gen/EFI/BOOT/refind_aa64.efi esp.gen/EFI/BOOT/BOOTAA64.EFI
-cp reboot2android -r esp.gen/EFI/
+cp reboot2android/android -r esp.gen/EFI/
 cp esp.orig/EFI/fedora -r esp.gen/EFI
 
 if [[ "$CUSTOM_UUID" != "" ]]; then

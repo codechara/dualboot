@@ -14,7 +14,7 @@ on:
         required: true
         default: 'esp'
 
-run-name: Xiaomi Pad 5 ESP (${{ inputs.name }})
+run-name: Xiaomi Pad 5 ESP
 
 jobs:
   esp:

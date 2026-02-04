@@ -29,8 +29,13 @@ jobs:
       - name: Build
         run: export GCC5_AARCH64_PREFIX=aarch64-linux-gnu- && make
 
+      - name: Prepare artifact
+        run: |
+          mkdir android
+          cp edk2/Build/Reboot2AndroidPkg/RELEASE_GCC5/AARCH64/Reboot2AndroidPkg/Application/Reboot2Android/Reboot2Android/OUTPUT/Reboot2Android.efi android/
+
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Reboot2Android
-          path: edk2/Build/Reboot2AndroidPkg/RELEASE_GCC5/AARCH64/Reboot2AndroidPkg/Application/Reboot2Android/Reboot2Android/OUTPUT/Reboot2Android.efi 
+          path: android

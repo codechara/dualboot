@@ -1,0 +1,44 @@
+name: xiaomi-nabu-esp-all-desktops
+run-name: Xiaomi Pad 5 ESP All Desktops
+on:
+  workflow_dispatch: {}
+
+jobs:
+  refind:
+    uses: ./.github/workflows/xiaomi-nabu-refind.yml
+
+  reboot2android:
+    uses: ./.github/workflows/xiaomi-nabu-reboot2android.yml
+
+  esp:
+    needs: [refind, reboot2android]
+    strategy:
+      matrix: 
+        desktop: [gnome-desktop, plasma-desktop, plasma-mobile, phosh]
+    uses: ./.github/workflows/xiaomi-nabu-dualboot-esp.yml
+    with:
+      url: 'https://github.com/pocketblue/pocketblue/releases/latest/download/pocketblue-xiaomi-nabu-${{ matrix.desktop }}-43.7z'
+      name: ${{ matrix.desktop }}
+
+  release:
+    needs: [esp]
+    strategy:
+      matrix:
+        desktop: [gnome-desktop, plasma-desktop, plasma-mobile, phosh]
+    steps:
+      - name: Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.desktop }}
+      
+      - name: Archive
+        run: zip ${{ matrix.desktop }}.zip esp.raw
+
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          name: Xiaomi Pad 5 ESP All Desktops
+          body: Dualbooting UEFI ESP images for latest desktops
+          draft: true
+          overwrite: true
+          tag: xioami-nabu-esp-all-desktops
