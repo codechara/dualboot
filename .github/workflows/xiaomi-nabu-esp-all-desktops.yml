@@ -22,6 +22,7 @@ jobs:
 
   release:
     needs: [esp]
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         desktop: [gnome-desktop, plasma-desktop, plasma-mobile, phosh]
