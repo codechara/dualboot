@@ -1,0 +1,41 @@
+name: xiaomi-nabu-esp-all-desktops
+run-name: Xiaomi Pad 5 ESP All Desktops
+on:
+  workflow_dispatch: {}
+
+jobs:
+  refind:
+    uses: ./.github/workflows/xiaomi-nabu-refind.yml
+
+  reboot2android:
+    uses: ./.github/workflows/xiaomi-nabu-reboot2android.yml
+
+  esp:
+    needs: [refind, reboot2android]
+    strategy:
+      matrix: 
+        desktop: [gnome-desktop, plasma-desktop, plasma-mobile, phosh]
+    uses: ./.github/workflows/xiaomi-nabu-esp.yml
+    with:
+      desktop: ${{ matrix.desktop }}
+
+  release:
+    needs: esp
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Prepare
+        run: sudo apt update && sudo apt install tree -y
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: Xiaomi Pad 5 UEFI Dualboot
+          files: |
+            gnome-desktop/gnome-desktop.zip
+            plasma-desktop/plasma-desktop.zip
+            plasma-mobile/plasma-mobile.zip
+            phosh/phosh.zip

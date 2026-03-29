@@ -1,5 +1,5 @@
 name: xiaomi-nabu-refind
-run-name: rEFInd
+run-name: 'rEFInd for Xiaomi Pad 5'
 on:
   workflow_dispatch: {}
   workflow_call: {}
@@ -38,9 +38,6 @@ jobs:
           cp refind/icons -r output/refind/
           cp refind/themes -r output/refind/
           cp refind/refind.conf-sample output/refind/refind.conf
-
-      - name: Tree
-        run: tree
 
       - name: Artifact
         uses: actions/upload-artifact@v4

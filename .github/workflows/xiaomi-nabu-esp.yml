@@ -1,25 +1,15 @@
 name: xiaomi-nabu-dualboot-esp
-run-name: Xiaomi Pad 5 Dualboot ESP 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      url:
+      desktop:
         type: string
         required: true
-        description: 'URL to desired release.7z'
-      uuid:
-        type: string
-        description: 'Custom UUID (leave blank for UUID)'
+
+run-name: 'Xiaomi Pad 5 ESP (${{ inputs.desktop }})'
 
 jobs:
-  refind:
-    uses: ./.github/workflows/xiaomi-nabu-refind.yml
-
-  reboot2android:
-    uses: ./.github/workflows/xiaomi-nabu-reboot2android.yml
-
   esp:
-    needs: [refind, reboot2android]
     runs-on: ubuntu-24.04
     steps:
       - name: Setup
@@ -32,7 +22,7 @@ jobs:
 
       - name: Download release.7z
         run: |
-          curl -L ${{ inputs.url }} --output release.7z
+          curl -L https://github.com/pocketblue/pocketblue/releases/latest/download/pocketblue-xiaomi-nabu-${{ inputs.desktop }}-43.7z --output release.7z
           7z x -orelease release.7z
 
       - name: Download rEFInd artifact 
@@ -47,16 +37,15 @@ jobs:
           name: Reboot2Android
           path: reboot2android
 
-      - name: Tree
-        run: tree
-
       - name: Generate ESP
-        env:
-          CUSTOM_UUID: ${{ inputs.custom_uuid }}
-        run: sudo -E bash ./dualboot/devices/xiaomi-nabu/scripts/generate-esp.sh
+        run: sudo bash ./dualboot/devices/xiaomi-nabu/scripts/generate-esp.sh
 
-      - name: Artifact esp.raw
+      - name: Compress ESP
+        run: zip ${{ inputs.desktop }}.zip esp.raw
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: esp
-          path: esp.raw
+          name: ${{ inputs.desktop }}
+          path: ${{ inputs.desktop }}.zip
+          retention-days: 7

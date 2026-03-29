@@ -9,14 +9,10 @@ mkdir esp.orig esp.gen
 mount release/images/fedora_esp.raw esp.orig
 mount esp.raw esp.gen
 
-mkdir esp.gen/EFI
+mkdir esp.gen/EFI esp.gen/EFI/Android
 cp refind/refind esp.gen/EFI/BOOT -r && mv esp.gen/EFI/BOOT/refind_aa64.efi esp.gen/EFI/BOOT/BOOTAA64.EFI
-cp reboot2android -r esp.gen/EFI/
+cp reboot2android/Reboot2Android.efi esp.gen/EFI/Android
 cp esp.orig/EFI/fedora -r esp.gen/EFI
-
-if [[ "$CUSTOM_UUID" != "" ]]; then
-    echo "set BOOT_UUID=\"$CUSTOM_UUID\"" > esp.gen/EFI/fedora/bootuuid.cfg
-fi
 
 umount esp.orig esp.gen
 rm -rf esp.orig esp.gen
